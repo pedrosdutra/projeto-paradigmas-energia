@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import data from './data/painel.json';
+// Marca publicada no Portal de Dados Abertos: https://dadosabertos.aneel.gov.br/logo-aneel.png
+import marcaAneel from './assets/aneel.png';
 import MapView from './components/MapView';
 import StateDetail from './components/StateDetail';
 import Ranking from './components/Ranking';
@@ -38,8 +40,8 @@ export default function App(){
   return <div className="app-shell">
     <a href="#main" className="skip-link">Ir para o conteúdo</a>
     <aside className="sidebar">
-      <a href="#main" onClick={()=>setPage('overview')} className="flex items-center gap-3 text-sm font-semibold tracking-tight" aria-label="Energia em perspectiva, início">
-        <span className="brand-mark" aria-hidden="true">e.</span><span>energia<span className="font-normal text-subtle"> / dados</span></span>
+      <a href="#main" onClick={()=>setPage('overview')} className="inline-flex w-fit items-center" aria-label="ANEEL, voltar à visão geral do projeto">
+        <img className="brand-logo" src={marcaAneel} alt="ANEEL" width="120" height="32" />
       </a>
       <p className="mb-3 mt-12 px-2 text-[10px] font-medium uppercase tracking-[.14em] text-subtle">Área de análise</p>
       <nav aria-label="Navegação principal" className="flex gap-1 lg:flex-col">{navigation.map(([id,label])=><button key={id} onClick={()=>setPage(id)} aria-current={page===id?'page':undefined} className={`nav-item ${page===id?'active':''}`}>{label}</button>)}</nav>

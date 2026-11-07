@@ -29,7 +29,7 @@
 @layer components {
   .app-shell {@apply grid min-h-screen lg:grid-cols-[208px_minmax(0,1fr)];}
   .sidebar {@apply border-b border-line px-6 py-5 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:border-b-0 lg:border-r lg:py-7; background:#101318;}
-  .brand-mark {@apply grid size-7 place-items-center rounded bg-[#254968] text-[17px] font-medium text-white; letter-spacing:-.08em;}
+  .brand-logo {display:block; width:120px; height:auto; max-width:100%;}
   .nav-item {@apply rounded px-3 py-2.5 text-left text-[13px] text-secondary transition-colors hover:bg-muted hover:text-ink;}
   .nav-item.active {@apply bg-[#223448] font-medium text-accent;}
   .sidebar-footer {@apply mt-auto hidden border-t border-line pt-5 lg:block;}

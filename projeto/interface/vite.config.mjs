@@ -5,5 +5,6 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
-  build: { target: 'es2020', cssCodeSplit: false },
+  // O Streamlit abre o HTML diretamente, com as imagens pequenas incorporadas.
+  build: { target: 'es2020', cssCodeSplit: false, assetsInlineLimit: 64 * 1024 },
 });
