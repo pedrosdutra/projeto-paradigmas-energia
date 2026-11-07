@@ -81,7 +81,6 @@ export default function App(){
         <div className={page==='overview'?'hidden':'pt-9'}>
           {page==='ranking' && <Ranking reference={reference} onSelect={selectState}/>}
         </div>
-        <footer className="mt-10 flex flex-wrap justify-between gap-3 border-t border-line pt-4 text-[10px] text-subtle"><span>Tarifas e atendimento: ANEEL · Geografia: IBGE</span><span>Coleta de {dateLabel(data.coleta)} · Valores nominais</span></footer>
       </main>
     </div>
     <SearchDialog open={searchOpen} onClose={()=>setSearchOpen(false)} states={reference.estados} onSelect={selectState}/>

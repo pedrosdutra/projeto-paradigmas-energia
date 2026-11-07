@@ -40,6 +40,5 @@ export default function MapView({ states, geometry, selected, onSelect }) {
         <div className="flex justify-between text-[10px] tabular-nums text-secondary"><span>{decimal(min)}</span><span>{decimal(max)}</span></div>
       </div>
     </div>
-    <p className="mt-3 text-[10px] text-subtle">Cinza: sem dados</p>
   </section>;
 }
