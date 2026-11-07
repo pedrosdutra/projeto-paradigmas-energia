@@ -1,19 +1,14 @@
-"""Servidor local do painel React; os cálculos ficam no núcleo Python.
-
-O HTML compilado contém os resultados exportados de fontes oficiais. Nenhum
-cálculo tarifário ou escolha de fonte é realizado neste invólucro de interface.
-"""
+"""Abre no Streamlit o mesmo painel disponível no site."""
 from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components
 
-PAINEL = Path(__file__).resolve().parent / 'frontend' / 'dist' / 'painel.html'
+PAINEL = Path(__file__).resolve().parent / 'docs' / 'index.html'
 
 st.set_page_config(page_title='Energia em perspectiva', layout='wide')
 
 if not PAINEL.is_file():
-    st.error('A interface ainda não foi compilada. Siga a seção de desenvolvimento do README.')
-    st.code('python exportar_frontend.py\ncd frontend\nnpm install\nnpm run build')
+    st.error('O arquivo do painel está ausente. Abra o README para saber como gerá-lo.')
     st.stop()
 
 # Uma única área de navegação: o iframe ocupa a janela e controla sua rolagem.

@@ -1,8 +1,7 @@
 .venv/
 __pycache__/
-.pytest_cache/
 *.pyc
-dados/*.part
+*.part
 node_modules/
 .env
 .env.*
@@ -10,3 +9,5 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+/apresentacao/
+/apresentacao_dupla/

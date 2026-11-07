@@ -112,4 +112,4 @@ if __name__=='__main__':
     try:
         main()
     except (OSError,ValueError,KeyError,RuntimeError) as erro:
-        raise SystemExit(f'Coleta não concluída: {erro}. Consulte README.md para importação manual.')
+        raise SystemExit(f'Coleta não concluída: {erro}.')

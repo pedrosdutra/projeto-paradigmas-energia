@@ -1,5 +1,0 @@
-node_modules/
-# O HTML pronto permite executar o Streamlit após clonar o repositório.
-dist/*
-!dist/painel.html
-!dist/rankings/

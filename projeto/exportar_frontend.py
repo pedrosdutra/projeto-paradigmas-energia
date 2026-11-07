@@ -74,7 +74,7 @@ def main():
             raise ValueError(f'Arquivo alterado desde a coleta: {nome}. Atualize o manifesto oficial antes de exportar.')
     payload=preparar(ler_csv(pasta/'tarifas_aneel.csv'),ler_csv(pasta/'mapeamento_aneel.csv'),
                     ler_json(pasta/'brasil_ufs.geojson'),manifesto)
-    destino=RAIZ/'frontend/src/data/painel.json'
+    destino=RAIZ/'interface/src/data/painel.json'
     destino.parent.mkdir(parents=True,exist_ok=True)
     destino.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     print(f'Exportadas {len(payload["referencias"])} referências oficiais e {len(payload["mapa"])} UFs.')
