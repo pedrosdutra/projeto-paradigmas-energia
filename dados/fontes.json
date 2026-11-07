@@ -1,0 +1,30 @@
+{
+  "origem": "ANEEL / IBGE; dados reais",
+  "coletado_em_utc": "2026-11-06T20:17:43.333178+00:00",
+  "tarifas_resource_id": "fcf2906c-7c32-4b9b-a637-054e7a5234f4",
+  "tarifas_csv_original": "https://dadosabertos.aneel.gov.br/dataset/5a583f3e-1646-4f67-bf0f-69db4203e89e/resource/fcf2906c-7c32-4b9b-a637-054e7a5234f4/download/tarifas-homologadas-distribuidoras-energia-eletrica.csv",
+  "filtro_api": {
+    "DscSubGrupo": "B1",
+    "DscModalidadeTarifaria": "Convencional",
+    "DscClasse": "Residencial",
+    "DscSubClasse": "Residencial",
+    "DscBaseTarifaria": "Tarifa de Aplicação"
+  },
+  "registros_tarifarios": 5450,
+  "indger_resource_id": "fd10c9d4-cb76-4020-a322-e79afb13eaf7",
+  "anos_mapeados": [
+    2024,
+    2025
+  ],
+  "registros_municipais": 12468,
+  "vinculos_uf": 239,
+  "geojson_url": "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?formato=application/vnd.geo%2Bjson&qualidade=minima&intrarregiao=UF",
+  "licenca_aneel": "Open Data Commons Open Database License (ODbL)",
+  "nota": "Mapeamento derivado de municípios com UC ativa > 0, apenas no mês observado; cobertura parcial possível.",
+  "sha256": {
+    "tarifas_aneel.csv": "2d3fdf4bd304a668fb66c99f0e732ca7075a031479be5355057ceaa1ab992521",
+    "evidencias_indger.csv": "56cb1156926129851919ab3446bf80fb26f5892d52665e2cd6d241cd7c4b3662",
+    "mapeamento_aneel.csv": "907b5bca56ea3deec5ee9e32923d889729d07d28530301dfe1441ad183190bcb",
+    "brasil_ufs.geojson": "6d0125fce119ea0c78bf2a4a02aa18e4dd2a61a0b648fa555bc82a9aa7b6dcea"
+  }
+}

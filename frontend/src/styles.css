@@ -1,0 +1,86 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import 'tailwindcss' source('./');
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-canvas: #14171c;
+  --color-muted: #1d232b;
+  --color-line: #303741;
+  --color-hoverline: #667589;
+  --color-accent: #8ebce2;
+  --color-ink: #edf1f5;
+  --color-strong: #dce3ec;
+  --color-body: #c5cfdb;
+  --color-secondary: #aab6c5;
+  --color-subtle: #94a1b1;
+}
+
+@layer base {
+  :root {color-scheme:dark; font-synthesis:none; text-rendering:optimizeLegibility;}
+  body {@apply m-0 bg-canvas font-sans text-ink antialiased;}
+  button, select, summary, a, input {-webkit-tap-highlight-color:transparent;}
+  button,select,summary {cursor:pointer;}
+  button:disabled {cursor:default;}
+  :focus-visible {outline:2px solid var(--color-accent); outline-offset:4px;}
+  ::selection {background:#315578; color:#f0f6fc;}
+  button,a,select {touch-action:manipulation;}
+}
+
+@layer components {
+  .app-shell {@apply grid min-h-screen lg:grid-cols-[208px_minmax(0,1fr)];}
+  .sidebar {@apply border-b border-line px-6 py-5 lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col lg:border-b-0 lg:border-r lg:py-7; background:#101318;}
+  .brand-mark {@apply grid size-7 place-items-center rounded bg-[#254968] text-[17px] font-medium text-white; letter-spacing:-.08em;}
+  .nav-item {@apply rounded px-3 py-2.5 text-left text-[13px] text-secondary transition-colors hover:bg-muted hover:text-ink;}
+  .nav-item.active {@apply bg-[#223448] font-medium text-accent;}
+  .sidebar-footer {@apply mt-auto hidden border-t border-line pt-5 lg:block;}
+  .topbar {@apply flex min-h-16 items-center justify-between gap-4 border-b border-line px-6 sm:px-10;}
+  .search-button {@apply flex items-center gap-2.5 rounded border border-line bg-transparent px-3 py-2 text-xs text-secondary transition-colors hover:border-hoverline hover:text-strong;}
+  kbd {@apply rounded-sm border border-line px-1 py-0.5 font-sans text-[9px] text-subtle;}
+  .main-content {@apply mx-auto max-w-[1312px] px-6 pb-7 pt-9 outline-none sm:px-10 sm:pt-11;}
+  .eyebrow {@apply text-[10px] font-medium uppercase tracking-[.13em] text-subtle;}
+  .source-badge {@apply inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-[10px] font-medium text-body;}
+  .select-control {@apply min-h-9 rounded border border-line bg-canvas py-1.5 pl-2.5 pr-7 font-medium text-strong;}
+  .button-secondary {@apply inline-flex min-h-9 items-center justify-center gap-2 rounded border border-line bg-canvas px-3 py-2 text-xs font-medium text-body transition-colors hover:border-hoverline hover:text-ink;}
+  .input-control {@apply min-h-10 rounded border border-line bg-transparent px-3 py-2 text-sm text-strong placeholder:text-subtle;}
+  .summary-strip {@apply grid grid-cols-1 gap-5 py-7 sm:grid-cols-3 sm:gap-0;}
+  .summary-strip > div {@apply sm:border-l sm:border-line sm:pl-8;}
+  .summary-strip > div:first-child {@apply border-l-0 pl-0;}
+  .summary-strip dt {@apply text-[11px] text-secondary;}
+  .summary-strip dd {@apply mt-2 text-[25px] font-medium tracking-[-.04em] tabular-nums;}
+  .summary-strip p {@apply mt-1.5 text-[10px] text-subtle;}
+  .map-svg {@apply mx-auto block w-full; max-height:490px;}
+  .map-stage {min-height:240px;}
+  .state-path {stroke:#71849a; stroke-width:1.4; vector-effect:non-scaling-stroke; cursor:pointer; transition:fill 140ms,stroke 140ms;outline:none;}
+  .state-path:hover,.state-path:focus-visible {stroke:#e6f1ff;stroke-width:2;outline:none;}
+  .state-path.is-selected {stroke:#ffffff;stroke-width:2.4;paint-order:stroke fill;}
+  .map-tooltip {@apply rounded border border-line bg-canvas px-3 py-2 text-xs;}
+  .detail-table th,.detail-table td {@apply border-b border-line py-3 pr-3;}
+  .detail-table thead th {@apply text-[10px] font-normal text-subtle;}
+  .detail-table td {@apply text-right tabular-nums text-body;}
+  .detail-table thead th:not(:first-child) {@apply text-right;}
+  .detail-table th:last-child,.detail-table td:last-child {@apply pr-0;}
+  .ranking-table th,.ranking-table td {@apply whitespace-nowrap border-b border-line px-4 py-4;}
+  .ranking-table th:first-child,.ranking-table td:first-child {@apply pl-0;}
+  .ranking-table thead th {@apply text-[10px] font-medium uppercase tracking-[.06em] text-subtle;}
+  .ranking-table tbody tr {@apply transition-colors hover:bg-muted;}
+  .source-link {@apply text-accent underline decoration-accent/30 underline-offset-4 hover:decoration-accent;}
+  .search-dialog {width:min(520px,calc(100vw - 32px)); margin:12vh auto auto; border:1px solid var(--color-line); border-radius:8px; background:var(--color-canvas); color:var(--color-ink); padding:0;}
+  .search-dialog::backdrop {background:rgba(0,0,0,.65);}
+  .notice {@apply fixed bottom-5 right-5 z-50 rounded border border-line bg-canvas px-4 py-3 text-xs text-body;}
+  .skip-link {@apply fixed left-4 top-4 z-50 -translate-y-24 rounded bg-accent px-4 py-3 text-sm text-[#101318] focus:translate-y-0;}
+}
+
+@media (max-width:1023px) {
+  .sidebar>p {display:none;}
+  .sidebar {display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .sidebar nav {margin:0;}
+}
+@media (max-width:480px) {
+  .topbar {padding:12px 24px;}
+  .search-button span {font-size:11px;}
+  .nav-item {font-size:12px;padding:8px;}
+  .summary-strip {grid-template-columns:1fr 1fr;gap:20px;}
+  .summary-strip>div:first-child {grid-column:1/-1;border-bottom:1px solid var(--color-line);padding-bottom:16px;}
+  .summary-strip dd {font-size:22px;}
+}
+@media (prefers-reduced-motion:reduce) {*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important;}}
