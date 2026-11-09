@@ -2,6 +2,8 @@
 
 Compare as tarifas residenciais de energia dos 26 estados e do Distrito Federal, escolha uma data e clique no mapa para ver as distribuidoras de cada estado. [Abrir o painel](https://pedrosdutra.github.io/projeto-paradigmas-energia/)
 
+Em **Comparar estados**, marque as UFs para ver as tarifas em R$/kWh e a diferença entre a maior e a menor média da seleção. O botão **Exportar CSV** dessa aba baixa apenas as UFs escolhidas.
+
 | Pasta | O que você encontra |
 | --- | --- |
 | [projeto](projeto/) | Código em Python, dados da ANEEL, mapa do IBGE e tela do painel. |

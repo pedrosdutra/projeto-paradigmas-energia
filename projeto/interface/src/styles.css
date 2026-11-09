@@ -32,6 +32,8 @@
   .brand-logo {display:block; width:120px; height:auto; max-width:100%;}
   .nav-item {@apply rounded px-3 py-2.5 text-left text-[13px] text-secondary transition-colors hover:bg-muted hover:text-ink;}
   .nav-item.active {@apply bg-[#223448] font-medium text-accent;}
+  .uf-toggle {@apply min-h-9 min-w-11 rounded border border-line px-2 text-xs font-medium text-secondary hover:border-hoverline;}
+  .uf-toggle[aria-pressed="true"] {@apply border-accent bg-[#223448] text-ink;}
   .sidebar-footer {@apply mt-auto hidden border-t border-line pt-5 lg:block;}
   .topbar {@apply flex min-h-16 items-center justify-between gap-4 border-b border-line px-6 sm:px-10;}
   .search-button {@apply flex items-center gap-2.5 rounded border border-line bg-transparent px-3 py-2 text-xs text-secondary transition-colors hover:border-hoverline hover:text-strong;}

@@ -5,7 +5,7 @@ import json
 import math
 from arquivos import ler_csv, ler_json
 from processamento import processar, normalizar_vinculos, CODIGOS_UF, UFS
-from analise import fotografia, resumir, ranking
+from analise import fotografia, resumir, ranking, diferencas_por_uf
 
 RAIZ = Path(__file__).resolve().parent
 NOMES = dict(zip(UFS, ('Acre','Alagoas','Amapá','Amazonas','Bahia','Ceará',
@@ -52,6 +52,7 @@ def preparar(tarifas, vinculos, geo, manifesto):
             itens=tuple(sorted((i.tarifa for i in foto.itens if i.uf==r.uf),key=lambda t:t.total))
             return {'uf':r.uf,'nome':NOMES[r.uf],'quantidade':r.quantidade,
                 'media':str(r.media) if r.media is not None else None,
+                'diferencas':{uf: str(valor) for uf, valor in diferencas_por_uf(r, resumos).items()},
                 'minima':str(r.minima) if r.minima is not None else None,
                 'maxima':str(r.maxima) if r.maxima is not None else None,
                 'distribuidoras':[{'nome':t.agente,'cnpj':t.cnpj,'te':str(t.te),'tusd':str(t.tusd),

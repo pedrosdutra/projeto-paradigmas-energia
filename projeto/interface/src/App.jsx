@@ -5,18 +5,21 @@ import marcaAneel from './assets/aneel.png';
 import MapView from './components/MapView';
 import StateDetail from './components/StateDetail';
 import Ranking from './components/Ranking';
+import Comparacao from './components/Comparacao';
+import { compararEstados } from './lib/comparacao.mjs';
 import SearchDialog from './components/SearchDialog';
 import { money, dateLabel, downloadRanking } from './lib/format.mjs';
 
 function SearchIcon(){return <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.4"/><path d="m13 13 4 4" stroke="currentColor" strokeWidth="1.4"/></svg>;}
 function DownloadIcon(){return <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>;}
 
-const navigation=[['overview','Visão geral'],['ranking','Ranking']];
+const navigation=[['overview','Visão geral'],['ranking','Ranking'],['comparacao','Comparar estados']];
 
 export default function App(){
   const [page,setPage]=useState('overview');
   const [referenceId,setReferenceId]=useState(data.referencias.at(-1)?.data);
   const [uf,setUf]=useState('CE');
+  const [selecao,setSelecao]=useState(['CE','BA']);
   const [searchOpen,setSearchOpen]=useState(false);
   const [notice,setNotice]=useState('');
   const reference=data.referencias.find(r=>r.data===referenceId);
@@ -35,7 +38,11 @@ export default function App(){
   const ordered=reference.ranking.map(code=>reference.estados.find(s=>s.uf===code));
   const lowest=ordered.at(-1),highest=ordered[0];
   const selectState=code=>{setUf(code);setPage('overview');};
-  const exportCsv=()=>{downloadRanking(reference);setNotice('Ranking preparado para download.');};
+  const comparacao = page === 'comparacao' ? compararEstados(reference, selecao) : null;
+  const exportCsv = () => {
+    downloadRanking(reference, comparacao?.linhas);
+    setNotice(comparacao ? 'Comparação preparada para download.' : 'Ranking preparado para download.');
+  };
 
   return <div className="app-shell">
     <a href="#main" className="skip-link">Ir para o conteúdo</a>
@@ -65,7 +72,7 @@ export default function App(){
               {data.referencias.map(r=><option key={r.data} value={r.data}>{dateLabel(r.data)}</option>)}
             </select><span className="hidden h-3 border-l border-line sm:inline"/><span className="text-subtle">B1 · Residencial comum · Convencional</span>
           </div>
-          <button className="button-secondary" onClick={exportCsv}><DownloadIcon/>Exportar CSV</button>
+          <button className="button-secondary disabled:opacity-50" onClick={exportCsv} disabled={comparacao?.linhas.length === 0}><DownloadIcon/>Exportar CSV</button>
         </div>
         {page==='overview' && <>
           <dl className="summary-strip">
@@ -80,6 +87,7 @@ export default function App(){
         </>}
         <div className={page==='overview'?'hidden':'pt-9'}>
           {page==='ranking' && <Ranking reference={reference} onSelect={selectState}/>}
+          {comparacao && <Comparacao estados={reference.estados} selecao={selecao} setSelecao={setSelecao} resultado={comparacao}/>}
         </div>
       </main>
     </div>

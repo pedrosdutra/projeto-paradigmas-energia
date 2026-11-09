@@ -1,7 +1,7 @@
 """Análise pura: fotografia de uma data, uma tarifa por CNPJ, resumo por UF."""
 from dataclasses import dataclass
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 from functools import reduce
 from itertools import groupby
 from processamento import Tarifa, Vinculo, UFS
@@ -62,3 +62,12 @@ def resumir(itens: tuple[ItemUF, ...]) -> tuple[ResumoUF, ...]:
 
 def ranking(resumos: tuple[ResumoUF, ...]) -> tuple[ResumoUF, ...]:
     return tuple(sorted(filter(lambda r:r.media is not None,resumos), key=lambda r:(-r.media,r.uf)))
+
+def diferencas_por_uf(estado: ResumoUF, resumos: tuple[ResumoUF, ...]) -> dict[str, Decimal]:
+    """Compara as médias da mesma data e arredonda só a diferença final."""
+    if estado.media is None:
+        return {}
+    return {
+        outro.uf: abs(estado.media - outro.media).quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
+        for outro in resumos if outro.media is not None
+    }
