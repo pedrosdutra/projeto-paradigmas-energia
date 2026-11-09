@@ -1,4 +1,3 @@
-"""Exporta o núcleo funcional para a interface React, sem recalcular médias em JS."""
 from pathlib import Path
 import hashlib
 import json
@@ -38,7 +37,6 @@ def projetar_mapa(geo):
                   'path':''.join(map(caminho,aneis(f)))} for f in geo['features'])
 
 def preparar(tarifas, vinculos, geo, manifesto):
-    """Transformação pura: mesmas entradas produzem o mesmo conteúdo exportado."""
     resultado=processar(tarifas)
     vinculos=normalizar_vinculos(vinculos)
     datas=sorted({v.fim for v in vinculos if any(
@@ -78,7 +76,6 @@ def main():
     destino=RAIZ/'interface/src/data/painel.json'
     destino.parent.mkdir(parents=True,exist_ok=True)
     destino.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-    print(f'Exportadas {len(payload["referencias"])} referências oficiais e {len(payload["mapa"])} UFs.')
 
 if __name__=='__main__':
     main()

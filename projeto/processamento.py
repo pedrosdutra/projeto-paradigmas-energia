@@ -1,4 +1,3 @@
-"""Núcleo funcional: recebe valores e devolve novos valores; não lê arquivos."""
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
@@ -6,7 +5,6 @@ import re
 import unicodedata
 from typing import Mapping
 
-# Tuplas e objetos frozen impedem alterações acidentais nos resultados.
 UFS = ('AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG',
        'PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO')
 CODIGOS_UF = (('11','RO'),('12','AC'),('13','AM'),('14','RR'),('15','PA'),
@@ -116,7 +114,6 @@ def normalizar(linha: Mapping[str, str]) -> Tarifa:
                   numero(linha['VlrTUSD']) / fatores[unidade], linha['DscREH'].strip())
 
 def processar(linhas: tuple[Mapping[str, str], ...]) -> Processamento:
-    """filter escolhe o perfil; map converte registros sem alterar a entrada."""
     if not linhas:
         return Processamento((), (), 0, 0)
     for linha in linhas:

@@ -1,4 +1,3 @@
-"""Abre no Streamlit o mesmo painel disponível no site."""
 from pathlib import Path
 import streamlit as st
 import streamlit.components.v1 as components

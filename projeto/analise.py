@@ -1,4 +1,3 @@
-"""Análise pura: fotografia de uma data, uma tarifa por CNPJ, resumo por UF."""
 from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
@@ -40,7 +39,6 @@ def fotografia(tarifas: tuple[Tarifa, ...], vinculos: tuple[Vinculo, ...], refer
         componentes = frozenset((t.te, t.tusd) for t in grupo)
         if len(componentes) != 1:
             return cnpj, None
-        # Uma representante determinística; não resolve divergências por "última linha".
         return cnpj, max(grupo, key=lambda t:(t.inicio,t.fim,t.resolucao,t.agente))
     escolhidas = tuple(map(escolher, grupos))
     validas = tuple(t for _, t in escolhidas if t is not None)
@@ -54,7 +52,6 @@ def fotografia(tarifas: tuple[Tarifa, ...], vinculos: tuple[Vinculo, ...], refer
 def resumir(itens: tuple[ItemUF, ...]) -> tuple[ResumoUF, ...]:
     def por_uf(uf):
         registros = tuple(filter(lambda item:item.uf == uf, itens))
-        # Defesa adicional contra vínculos duplicados na entrada.
         valores = tuple(t.total for t in {i.tarifa.cnpj:i.tarifa for i in registros}.values())
         return ResumoUF(uf,len(valores),media(valores),min(valores) if valores else None,
                         max(valores) if valores else None)

@@ -15,7 +15,6 @@ for(const match of [...html.matchAll(/<link\b[^>]*href="([^"]+\.css)"[^>]*>/g)])
   const css=await fs.readFile(path.join('dist',match[1]),'utf8');
   html=html.replace(match[0],()=>`<style>${css}</style>`);
 }
-// A página guarda a identificação dos dados usados nesta edição.
 const dados = await fs.readFile('src/data/painel.json');
 const codigo = createHash('sha256').update(dados).digest('hex');
 html = html.replace('</head>', `<meta name="dados-sha256" content="${codigo}"></head>`);
@@ -24,4 +23,3 @@ const pastaPublicada = new URL('../../../docs/', import.meta.url);
 await fs.mkdir(pastaPublicada, { recursive: true });
 await fs.writeFile(new URL('index.html', pastaPublicada), html);
 await fs.writeFile(new URL('.nojekyll', pastaPublicada), '');
-console.log('Painel pronto em docs/index.html');

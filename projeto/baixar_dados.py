@@ -77,13 +77,11 @@ def main():
     parser.add_argument('--anos',type=int,nargs='+',default=[2024,2025],help='Dezembro de cada ano para evidência geográfica')
     args=parser.parse_args()
     PASTA.mkdir(exist_ok=True)
-    print('Consultando tarifas residenciais da ANEEL...',flush=True)
     tarifas=consultar(TARIFAS_ID,FILTRO_API)
     if not tarifas:
         raise RuntimeError('Fonte retornou zero tarifas; arquivos anteriores preservados')
     evidencias=[]
     for ano in sorted(set(args.anos)):
-        print(f'Consultando municípios atendidos em dezembro/{ano}...',flush=True)
         registros=consultar(INDGER_ID,{'DatReferenciaInformada':f'{ano}-12-01'},
                   ('NumCNPJ','SigAgente','CodMunicipioIBGE','DatReferenciaInformada','QtdUCAtiva'))
         if not registros:
@@ -106,7 +104,6 @@ def main():
       'nota':'Mapeamento derivado de municípios com UC ativa > 0, apenas no mês observado; cobertura parcial possível.',
       'sha256':{p.name:hash_arquivo(p) for p in (PASTA/'tarifas_aneel.csv',PASTA/'evidencias_indger.csv',PASTA/'mapeamento_aneel.csv',PASTA/'brasil_ufs.geojson')}}
     (PASTA/'fontes.json').write_text(json.dumps(manifesto,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(f'Concluído: {len(tarifas)} tarifas; {len(vinculos)} vínculos UF/período.')
 
 if __name__=='__main__':
     try:

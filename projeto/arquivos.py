@@ -1,4 +1,3 @@
-"""Fronteira de efeitos: arquivos são lidos aqui, fora dos cálculos."""
 import csv
 import io
 import json

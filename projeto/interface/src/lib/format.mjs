@@ -10,7 +10,6 @@ export const dateLabel = value => new Intl.DateTimeFormat('pt-BR', {
 export const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 export const searchStates = (states, query) => states.filter(s =>
   normalize(`${s.nome} ${s.uf}`).includes(normalize(query.trim())));
-// Azul claro representa menor média; azul profundo representa maior média.
 export const palette = ['#d6e9f7', '#a6c8e4', '#6fa7cf', '#367fb4', '#174c7a'];
 export const noDataColor = '#454b55';
 export function tariffColor(value, min, max) {
