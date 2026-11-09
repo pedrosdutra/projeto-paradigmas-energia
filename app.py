@@ -7,7 +7,7 @@ PAINEL = Path(__file__).resolve().parent / 'docs' / 'index.html'
 st.set_page_config(page_title='Energia em perspectiva', layout='wide')
 
 if not PAINEL.is_file():
-    st.error('O arquivo do painel está ausente. Abra o README para saber como gerá-lo.')
+    st.error('O arquivo do painel está ausente.')
     st.stop()
 
 # Uma única área de navegação: o iframe ocupa a janela e controla sua rolagem.
