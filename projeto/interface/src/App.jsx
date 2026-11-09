@@ -8,10 +8,9 @@ import Ranking from './components/Ranking';
 import Comparacao from './components/Comparacao';
 import { compararEstados } from './lib/comparacao.mjs';
 import SearchDialog from './components/SearchDialog';
-import { money, dateLabel, downloadRanking } from './lib/format.mjs';
+import { money, dateLabel } from './lib/format.mjs';
 
 function SearchIcon(){return <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.4"/><path d="m13 13 4 4" stroke="currentColor" strokeWidth="1.4"/></svg>;}
-function DownloadIcon(){return <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2v10m-4-4 4 4 4-4M3 13v4h14v-4" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>;}
 
 const navigation=[['overview','Visão geral'],['ranking','Ranking'],['comparacao','Comparar estados']];
 
@@ -21,7 +20,6 @@ export default function App(){
   const [uf,setUf]=useState('CE');
   const [selecao,setSelecao]=useState(['CE','BA']);
   const [searchOpen,setSearchOpen]=useState(false);
-  const [notice,setNotice]=useState('');
   const reference=data.referencias.find(r=>r.data===referenceId);
   useEffect(()=>{
     const handleKey=e=>{
@@ -32,18 +30,12 @@ export default function App(){
     window.addEventListener('keydown',handleKey);
     return ()=>window.removeEventListener('keydown',handleKey);
   },[]);
-  useEffect(()=>{if(notice){const timer=setTimeout(()=>setNotice(''),4000);return()=>clearTimeout(timer);}},[notice]);
   if(!reference) return <main className="mx-auto max-w-xl px-6 py-20"><h1 className="text-2xl font-medium">Base oficial indisponível</h1><p className="mt-4 text-secondary">Gere novamente os resultados a partir dos arquivos oficiais da ANEEL.</p></main>;
   const state=reference.estados.find(s=>s.uf===uf);
   const ordered=reference.ranking.map(code=>reference.estados.find(s=>s.uf===code));
   const lowest=ordered.at(-1),highest=ordered[0];
   const selectState=code=>{setUf(code);setPage('overview');};
   const comparacao = page === 'comparacao' ? compararEstados(reference, selecao) : null;
-  const exportCsv = () => {
-    downloadRanking(reference, comparacao?.linhas);
-    setNotice(comparacao ? 'Comparação preparada para download.' : 'Ranking preparado para download.');
-  };
-
   return <div className="app-shell">
     <a href="#main" className="skip-link">Ir para o conteúdo</a>
     <aside className="sidebar">
@@ -72,7 +64,6 @@ export default function App(){
               {data.referencias.map(r=><option key={r.data} value={r.data}>{dateLabel(r.data)}</option>)}
             </select><span className="hidden h-3 border-l border-line sm:inline"/><span className="text-subtle">B1 · Residencial comum · Convencional</span>
           </div>
-          <button className="button-secondary disabled:opacity-50" onClick={exportCsv} disabled={comparacao?.linhas.length === 0}><DownloadIcon/>Exportar CSV</button>
         </div>
         {page==='overview' && <>
           <dl className="summary-strip">
@@ -92,6 +83,5 @@ export default function App(){
       </main>
     </div>
     <SearchDialog open={searchOpen} onClose={()=>setSearchOpen(false)} states={reference.estados} onSelect={selectState}/>
-    {notice && <div role="status" className="notice">{notice}</div>}
   </div>;
 }

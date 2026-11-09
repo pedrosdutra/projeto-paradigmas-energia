@@ -18,19 +18,3 @@ export function tariffColor(value, min, max) {
   const position = max === min ? .5 : (Number(value) - min) / (max - min);
   return palette[Math.max(0, Math.min(4, Math.floor(position * 5)))];
 }
-// Exportamos os resultados vindos do Python, sem recalcular médias em JavaScript.
-export function rankingCsv(reference, rows = reference.ranking.map(uf => reference.estados.find(s => s.uf === uf))) {
-  const quote = v => `"${String(v).replaceAll('"','""')}"`;
-  return '\ufeff' + [
-    ['UF','Estado','Media_R$_kWh','Distribuidoras','Data','Fonte','Metodo'],
-    ...rows.map(s => [s.uf,s.nome,s.media?.replace('.',',') ?? '',s.quantidade,reference.data,'ANEEL',
-      'Media simples das distribuidoras observadas']),
-  ].map(row => row.map(quote).join(';')).join('\r\n');
-}
-export function downloadRanking(reference, selecionados) {
-  const url = URL.createObjectURL(new Blob([rankingCsv(reference, selecionados)], { type:'text/csv;charset=utf-8' }));
-  const link = document.createElement('a');
-  link.href=url; link.download=`${selecionados ? 'comparativo_aneel' : 'tarifas_aneel'}_${reference.data}.csv`;
-  document.body.appendChild(link); link.click(); link.remove();
-  setTimeout(() => URL.revokeObjectURL(url),1000);
-}
