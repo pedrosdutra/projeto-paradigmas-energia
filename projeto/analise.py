@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
 from functools import reduce
-from itertools import groupby
+from itertools import chain, filterfalse, groupby, starmap
+from operator import attrgetter, itemgetter
 from processamento import Tarifa, Vinculo, UFS
 
 @dataclass(frozen=True)
@@ -25,46 +26,52 @@ class ResumoUF:
     minima: Decimal | None
     maxima: Decimal | None
 
-def media(valores: tuple[Decimal, ...]) -> Decimal | None:
-    """reduce acumula soma e contagem; ausência permanece None, nunca zero."""
-    soma, n = reduce(lambda acc, x: (acc[0] + x, acc[1] + 1), valores, (Decimal(0), 0))
-    return soma / n if n else None
+somar_tarifa = lambda acumulado, tarifa: (acumulado[0] + tarifa, acumulado[1] + 1)
+dividir = lambda soma, quantidade: soma / quantidade if quantidade else None
+media = lambda valores: dividir(*reduce(somar_tarifa, valores, (Decimal(0), 0)))
 
-def fotografia(tarifas: tuple[Tarifa, ...], vinculos: tuple[Vinculo, ...], referencia: date) -> Fotografia:
-    vigentes = tuple(filter(lambda t: t.inicio <= referencia <= t.fim, tarifas))
-    grupos = tuple((cnpj, tuple(g)) for cnpj, g in groupby(sorted(vigentes, key=lambda t:t.cnpj), key=lambda t:t.cnpj))
-    def escolher(par):
-        cnpj, grupo = par
-        # Repetições idênticas e rótulos diferentes com mesmos componentes não pesam mais.
-        componentes = frozenset((t.te, t.tusd) for t in grupo)
-        if len(componentes) != 1:
-            return cnpj, None
-        return cnpj, max(grupo, key=lambda t:(t.inicio,t.fim,t.resolucao,t.agente))
-    escolhidas = tuple(map(escolher, grupos))
-    validas = tuple(t for _, t in escolhidas if t is not None)
-    def ufs(t):
-        return tuple(sorted(frozenset(v.uf for v in vinculos
-                          if v.cnpj == t.cnpj and v.inicio <= referencia <= v.fim)))
-    itens = tuple(ItemUF(uf,t) for t in validas for uf in ufs(t))
-    return Fotografia(itens, tuple(c for c,t in escolhidas if t is None),
-                      tuple(t.cnpj for t in validas if not ufs(t)), len(grupos))
+vigente = lambda registro, dia: registro.inicio <= dia <= registro.fim
+cnpj = attrgetter('cnpj')
+componentes = attrgetter('te', 'tusd')
+representante = lambda grupo: (
+    max(grupo, key=attrgetter('inicio', 'fim', 'resolucao', 'agente'))
+    if len(set(map(componentes, grupo))) == 1 else None
+)
+escolher = lambda chave, grupo: (chave, representante(tuple(grupo)))
+agrupar = lambda tarifas: tuple(starmap(escolher, groupby(sorted(tarifas, key=cnpj), key=cnpj)))
 
-def resumir(itens: tuple[ItemUF, ...]) -> tuple[ResumoUF, ...]:
-    def por_uf(uf):
-        registros = tuple(filter(lambda item:item.uf == uf, itens))
-        valores = tuple(t.total for t in {i.tarifa.cnpj:i.tarifa for i in registros}.values())
-        return ResumoUF(uf,len(valores),media(valores),min(valores) if valores else None,
-                        max(valores) if valores else None)
-    return tuple(map(por_uf, UFS))
+ufs_atendidas = lambda tarifa, vinculos: sorted(set(map(
+    attrgetter('uf'), filter(lambda v: v.cnpj == tarifa.cnpj, vinculos)
+)))
+vincular = lambda tarifa, vinculos: tuple(map(lambda uf: ItemUF(uf, tarifa), ufs_atendidas(tarifa, vinculos)))
+montar_foto = lambda grupos, itens, validas: Fotografia(
+    itens,
+    tuple(map(itemgetter(0), filter(lambda par: par[1] is None, grupos))),
+    tuple(filterfalse(cnpjs_atendidos(itens).__contains__, map(cnpj, validas))),
+    len(grupos)
+)
+cnpjs_atendidos = lambda itens: frozenset(map(attrgetter('tarifa.cnpj'), itens))
+juntar_tarifas = lambda grupos, vinculos, validas: montar_foto(
+    grupos, tuple(chain.from_iterable(map(lambda t: vincular(t, vinculos), validas))), validas
+)
+associar = lambda grupos, vinculos: juntar_tarifas(
+    grupos, vinculos, tuple(filter(lambda t: t is not None, map(itemgetter(1), grupos)))
+)
+fotografia = lambda tarifas, vinculos, referencia: associar(
+    agrupar(filter(lambda t: vigente(t, referencia), tarifas)),
+    tuple(filter(lambda v: vigente(v, referencia), vinculos))
+)
 
-def ranking(resumos: tuple[ResumoUF, ...]) -> tuple[ResumoUF, ...]:
-    return tuple(sorted(filter(lambda r:r.media is not None,resumos), key=lambda r:(-r.media,r.uf)))
-
-def diferencas_por_uf(estado: ResumoUF, resumos: tuple[ResumoUF, ...]) -> dict[str, Decimal]:
-    """Compara as médias da mesma data e arredonda só a diferença final."""
-    if estado.media is None:
-        return {}
-    return {
-        outro.uf: abs(estado.media - outro.media).quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
-        for outro in resumos if outro.media is not None
-    }
+totais_unicos = lambda itens: tuple(dict(map(lambda i: (i.tarifa.cnpj, i.tarifa.total), itens)).values())
+resumo_uf = lambda uf, valores: ResumoUF(
+    uf, len(valores), media(valores), min(valores, default=None), max(valores, default=None)
+)
+resumir = lambda itens: tuple(map(
+    lambda uf: resumo_uf(uf, totais_unicos(filter(lambda i: i.uf == uf, itens))), UFS
+))
+com_media = lambda estado: estado.media is not None
+ranking = lambda resumos: tuple(sorted(filter(com_media, resumos), key=lambda r: (-r.media, r.uf)))
+diferenca = lambda a, b: abs(a - b).quantize(Decimal('0.0001'), rounding=ROUND_HALF_UP)
+diferencas_por_uf = lambda estado, resumos: dict(map(
+    lambda outro: (outro.uf, diferenca(estado.media, outro.media)), filter(com_media, resumos)
+)) if com_media(estado) else {}

@@ -9,6 +9,8 @@ Em **Comparar estados**, marque as UFs para ver as tarifas em R$/kWh e a diferen
 | [projeto](projeto/) | Código em Python, dados da ANEEL, mapa do IBGE e tela do painel. |
 | [docs](docs/) | Página pronta que o GitHub publica e que o aplicativo abre no computador. |
 
+No processamento em Python, funções escritas com `lambda` selecionam as tarifas com `filter`, convertem cada registro com `map` e calculam a média com `reduce`. A coleta e a leitura de arquivos ficam separadas dos cálculos.
+
 ## Abrir no Windows
 
 Para usar a cópia do computador, baixe o projeto em **Code → Download ZIP**, extraia os arquivos e abra o PowerShell na pasta que contém `app.py`. Com o Python 3.12 ou superior instalado, execute uma linha de cada vez.

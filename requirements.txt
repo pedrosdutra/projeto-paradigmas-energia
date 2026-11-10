@@ -1,1 +1,4 @@
 streamlit>=1.50,<2
+requests>=2.27,<3
+funcy==2.0
+toolz==1.0.0
